@@ -65,20 +65,36 @@ Choose per topic and per their apparent energy:
 
 When unsure, lean Socratic for things they can clearly reason about; otherwise narrate.
 
-## Asking questions — two kinds, one tool
+## Two surfaces — what goes where
 
-Both kinds go through `AskUserQuestion`, but they are **not** the same move and must not be blurred:
+You are teaching across two displays at once. The terminal renders plain text. Notion renders LaTeX, mermaid, tables, and toggles. One rule follows, and the quiz, dependency-map, and diagram rules below are all just instances of it:
+
+> **If it only renders properly in Notion, it lives in Notion, and chat gets a one-line pointer to it.** Never emit a degraded copy into chat alongside it — a learner reading the broken version is reading the wrong artifact, and a paraphrase of notation is a different claim than the notation.
+
+Chat keeps what it's good at: prose, verdicts, direction, and anything conversational. The page keeps everything that needs rendering — which, conveniently, is also everything worth keeping.
+
+## Asking questions — two kinds, two surfaces
+
+Two kinds, and they are **not** the same move — don't blur them:
 
 - **Graded question** — has a correct answer. You mark it right or wrong, reveal the answer, and explain. This is the workhorse for probing and confirming. **Read `references/quiz.md` before writing your first one** — the option-construction procedure there is not optional, and options written without it leak their own answer.
 - **Open question** — genuinely no right answer: preferences, direction, what they want next. Just ask; never grade it.
 
 If it has a right answer, it is graded. Don't downgrade a gradable question to an open one to avoid marking someone wrong — the grade is the entire diagnostic signal.
 
+**Where you ask depends on whether there's math in it.** Terminals can't render LaTeX, and a question about $`e^{x^2}`$ paraphrased into "e to the x squared" is a different, worse question. So:
+
+- **Any math notation** — in the stem, in one option, or in the explanation you're about to give — the question goes on the Notion page, where LaTeX renders and they answer by ticking a checkbox. Read `references/notion-quiz.md` for the mechanic.
+- **No math** — `AskUserQuestion`, as before. Faster, no context switch.
+- **Open questions** — always `AskUserQuestion`, math or not. They steer the session and need to be quick.
+
 ## Logging to Notion
 
-Every session is mirrored to a Notion page so the lesson survives the conversation. **Read `references/notion.md` at the start of a session** and follow its contract: create the page after Phase 1b once you know their starting point, then append at each checkpoint, verbatim.
+Every session is mirrored to a Notion page so the lesson survives the conversation — and, for anything with math in it, the page is also where you ask questions and they answer. **Read `references/notion.md` at the start of a session** and follow its contract: create the page before Phase 1a, fill in the goal and starting point once probing is done, then append at each checkpoint, verbatim.
 
-The destination lives in `references/notion-config.md`. If it says *not configured*, run the one-time setup in that file before Phase 1 — then never ask again.
+The page exists from the first moment because Phase 1a's probe questions may need somewhere to live (`references/notion-quiz.md`). It starts as a stub with placeholders, not as a finished record.
+
+The destination is already configured (`references/notion-config.md`) — lessons go under the **Learning** page. Don't ask the learner where to log, and don't run setup.
 
 If Notion is unreachable, say so once and teach anyway — a broken log must never block a lesson.
 
@@ -117,10 +133,14 @@ This is the highest-leverage step; don't rush it. With their level and their goa
 
 A good plan is what makes the teaching feel inevitable instead of arbitrary.
 
-**Then present the plan in chat — always, before any teaching.** Two parts:
+**Then present the plan — always, before any teaching.** Two parts:
 
-1. **The approach, in prose.** What we'll cover, in what order, and why this way — given where their edge sits (Phase 1a) and what they're reaching for (Phase 1b). A few freeform sentences.
-2. **The dependency map.** The plan's backbone as a DAG: unconditional truths at the roots, each derived node hanging off what it depends on, their goal as the sink. Draw it as a small ```mermaid``` graph. This map *is* the teaching order — Phase 3 builds it node by node. Keep it small: few nodes, short labels — a map, not the territory.
+1. **The approach, in prose.** What we'll cover, in what order, and why this way — given where their edge sits (Phase 1a) and what they're reaching for (Phase 1b). A few freeform sentences. Say this in chat *and* write it to the page — it's short, and the log has to stand on its own.
+2. **The dependency map.** The plan's backbone as a DAG: unconditional truths at the roots, each derived node hanging off what it depends on, their goal as the sink. This map *is* the teaching order — Phase 3 builds it node by node. **Read `references/dependency-map.md` before drawing it** — it's a construction procedure, not a style guide, and maps drawn without it come out unreadable in a specific, predictable way.
+
+Do not try to keep the node count down. The map has as many nodes as the lesson has steps; what must stay small is each **label**. Squeezing the count is what produces compound labels like `High variance → baseline → advantage`, which hide the very edges the map exists to draw.
+
+**The map goes on the Notion page, not in chat.** A ```mermaid block is an unreadable pile of arrows and brackets in a terminal; Notion renders it as an actual diagram. Write it to the page (`notion.md`, Checkpoint 2) and point them at it in one line — *"Plan and dependency map are on the page."* Never paste the mermaid source into chat as well: they'd be approving the version they can read, which is the wrong one.
 
 **Stress-test the roots before presenting.** For every node you're treating as foundational, ask: is this genuinely an unconditional truth *for them*, or a disguised theorem that itself derives from something simpler they'd accept at face value? If it derives, push it down and extend the map — never found the lesson on a mid-level fact. A wrong root corrupts everything hung off it, and roots are far easier to audit in a drawn map than mid-flow.
 
@@ -145,7 +165,9 @@ If you catch yourself asserting a fact they'd have to take on faith — foundati
 
 ## Visuals
 
-When an idea is genuinely clearer as a picture — a dependency graph, a flow, a sequence, a state machine, a tree, a comparison — use the `visualize` skill. It produces one minimal mermaid diagram and drops it into the lesson and the Notion log.
+When an idea is genuinely clearer as a picture — a dependency graph, a flow, a sequence, a state machine, a tree, a comparison — use the `visualize` skill. It produces one minimal mermaid diagram.
+
+**Every diagram goes on the Notion page, never in chat** — same reason as the dependency map. Write it to the page and refer to it in a few words; don't paste the source into the terminal, where it reads as noise and buries the sentence it was meant to clarify.
 
 Do not reach for a visual when prose or a single equation already carries the idea. A decorative diagram that restates the sentence next to it adds noise and a chance to be wrong.
 
@@ -153,9 +175,10 @@ Do not reach for a visual when prose or a single equation already carries the id
 
 Sessions are written to Notion, which renders LaTeX. Whenever math notation is involved — explanations, questions, answer options, anything — write it in LaTeX instead of plain-text approximations:
 
-- Inline math: `$f(x)$`
+- Inline math: `` $`f(x)`$ `` — the equation goes inside backticks, inside the dollars
 - Display math: `$$` fenced on its own lines
+- Inside an equation, **do not escape anything** — write the LaTeX exactly as you mean it, even though Notion-flavored Markdown escapes `\ { } ^ $` in ordinary text
 
-If LaTeX can be used, it should be. Write $f(x) = x^2$, not `f(x) = x^2`.
+If LaTeX can be used, it should be. Write $`f(x) = x^2`$, not `f(x) = x^2`.
 
-One caveat for `AskUserQuestion`: **option labels and headers render as plain terminal text, not LaTeX.** Keep raw notation out of labels — write "x squared" in a label, and save `$x^2$` for the chat message and the Notion log.
+One caveat for `AskUserQuestion`: **option labels and headers render as plain terminal text, not LaTeX.** This is why math-bearing questions go to Notion instead (see above) rather than being paraphrased into labels. Prose-math like "x squared" is the fallback for when Notion is unreachable, not the normal path.

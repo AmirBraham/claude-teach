@@ -44,12 +44,14 @@ leaves a usable record.
 ## Contents
 
 ```
-skills/teach/SKILL.md                    the two principles + the 3-phase process
-skills/teach/references/quiz.md          how to write graded questions that don't leak their answer
-skills/teach/references/notion.md        the lesson-log contract (4 checkpoints)
-skills/teach/references/notion-config.md where lessons get logged (set up on first run)
-skills/visualize/SKILL.md                one minimal mermaid diagram, when a picture earns its place
-agents/researcher.md                     fact-verification subagent
+skills/teach/SKILL.md                      the two principles + the 3-phase process
+skills/teach/references/quiz.md            how to write graded questions that don't leak their answer
+skills/teach/references/notion-quiz.md     asking + grading math questions in Notion, where LaTeX renders
+skills/teach/references/dependency-map.md  how to draw a Phase 2 map that's actually readable
+skills/teach/references/notion.md          the lesson-log contract (5 checkpoints)
+skills/teach/references/notion-config.md   where lessons get logged (set up on first run)
+skills/visualize/SKILL.md                  one minimal mermaid diagram, when a picture earns its place
+agents/researcher.md                       fact-verification subagent
 ```
 
 The most transferable file is probably [`quiz.md`](skills/teach/references/quiz.md).

@@ -1,10 +1,14 @@
 # Graded questions
 
-A graded question has a correct answer that **you** decide before asking. You ask it with `AskUserQuestion`, then grade it in your very next message. It is the instrument that locates the learner's edge (Phase 1a) and confirms a node landed (Phase 3, step 4).
+A graded question has a correct answer that **you** decide before asking. You ask it, then grade it in your very next message. It is the instrument that locates the learner's edge (Phase 1a) and confirms a node landed (Phase 3, step 4).
 
 This is not the same tool-use as asking a preference. The difference is entirely in your head and in what you do with the answer — so hold the distinction deliberately.
 
+**Two surfaces.** A question carrying math notation goes to the Notion page, where LaTeX renders — see `references/notion-quiz.md` for that mechanic. Everything else goes to `AskUserQuestion` in the terminal. Everything below this line governs both surfaces except where marked, because what makes a question diagnostic has nothing to do with where it's displayed.
+
 ## The harness constraints — design around them
+
+*Terminal surface only. In Notion, constraints 1 and 3 don't apply — but 2 and 4 do, for reasons that aren't about the harness at all.*
 
 `AskUserQuestion` was built for decisions, not quizzes. Four consequences you must actively compensate for:
 
@@ -34,7 +38,7 @@ The rule "keep options even" isn't enough on its own, because it's a *post-hoc a
 - **Use `multiSelect: true` only when more than one option is correct**, and grade it as an exact-set match: correct only if they select every correct option and no incorrect ones.
 - **Keep `header` under 12 characters** — it's a chip, not a summary.
 - **Put shared context in the question text**, not repeated across options.
-- **No LaTeX in labels or headers.** They render as plain terminal text. Write "x squared" in the label; save `$x^2$` for the grading message and the Notion log.
+- **No LaTeX in labels or headers.** They render as plain terminal text. But don't reach for "x squared" as the fix — a question that needs notation belongs in Notion (`notion-quiz.md`), not paraphrased into the terminal. Prose-math is the fallback for when Notion is unreachable, not a design choice.
 
 ## Grading
 
