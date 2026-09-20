@@ -112,6 +112,3 @@ These are not bugs — they're the zero-dependency path, taken on purpose:
 The two dropped capabilities are the real losses. Mermaid is nodes-and-edges and has
 no coordinate system, so anything genuinely spatial has to fall back to prose.
 `visualize` states this limit explicitly rather than producing a mangled diagram.
-
-The skill is named `teach` rather than `learn` because `learn` collides with an
-existing gstack skill (which records project learnings).
