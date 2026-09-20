@@ -56,7 +56,10 @@ This checkpoint comes *before* approval, not after, because the page is where th
 
 ### Checkpoint 3 — each node (as it lands)
 
-After a node passes its quiz-check, append a `### <node name>` section containing the teaching text **verbatim as delivered** — the motivation, the establishment, the explicit dependency edge, any diagram.
+Each node ends up on the page as a `### <node name>` section holding the motivation, the establishment, the explicit dependency edge, and any diagram. How it gets there depends on where it was taught:
+
+- **Math-bearing nodes are written here first** — the page *is* the delivery surface (`SKILL.md`, Phase 3). Write the section, then point them at it. There is nothing to mirror afterwards.
+- **Nodes taught in chat are mirrored here after they land**, verbatim.
 
 **Verbatim means verbatim.** Do not summarize, tighten, or "clean up" the lesson on its way into the log. The phrasing that made it land is the artifact worth keeping; a compressed version is a set of notes about a lesson rather than the lesson. The one exception is stripping pure conversational filler ("great question", "let's move on").
 

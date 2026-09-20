@@ -84,7 +84,11 @@ If it has a right answer, it is graded. Don't downgrade a gradable question to a
 
 **Where you ask depends on whether there's math in it.** Terminals can't render LaTeX, and a question about $`e^{x^2}`$ paraphrased into "e to the x squared" is a different, worse question. So:
 
-- **Any math notation** — in the stem, in one option, or in the explanation you're about to give — the question goes on the Notion page, where LaTeX renders and they answer by ticking a checkbox. Read `references/notion-quiz.md` for the mechanic.
+- **Any math notation** — in the stem, in one option, or in the explanation you're about to give — the question goes on the Notion page, where LaTeX renders and they answer by ticking a checkbox or just writing. Read `references/notion-quiz.md` for the mechanic.
+
+**Never ask them to tell you they've answered.** After posting a question you arm a background watch and stay quiet until they respond; ticking a box *is* the reply. Making the learner alt-tab back to the terminal to type "go" would hand back exactly the friction that moving to Notion was meant to remove.
+
+The watch needs a Notion API token, checked **once at the start of a session** — see `references/notion-token.md`. Missing, you ask for it once, accept a no gracefully, and fall back to a slower timer. Never interrupt a lesson in progress to run setup.
 - **No math** — `AskUserQuestion`, as before. Faster, no context switch.
 - **Open questions** — always `AskUserQuestion`, math or not. They steer the session and need to be quick.
 
@@ -160,6 +164,8 @@ For **every node** (each unconditional truth *and* each non-trivial reasoning st
 4. **Quiz-check.** Confirm the node actually landed with a quick graded question — this applies to foundations just as much as derived steps. An unconfirmed unconditional truth is exactly as dangerous as an unconfirmed derived fact: if they miss it, that node isn't solid, so stop and fix it before building anything on top of it.
 
 Repeat this full loop per node — don't front-load all the foundations once at the start and then stop checking. Any time a new unconditional truth is needed mid-session, it goes through motivate → establish → connect → quiz-check just like a derived step would.
+
+**Where a node gets taught follows the same rule as everything else.** If the node's substance carries math, *the page is where you deliver it* — write the motivation, the derivation and the dependency edge there, and let chat carry only the conversational thread: the hook into the node, the verdict on its quiz-check, and the handoff to the next one. Do not teach a derivation into the terminal and mirror it afterwards; the learner would be reading the broken copy while the good one sits unread on the page. For a node with no notation in it, teach in chat as normal and mirror per `notion.md` — chat is more fluid and there's nothing to lose by using it.
 
 If you catch yourself asserting a fact they'd have to take on faith — foundational or not — stop: either motivate it and confirm it lands, or ground it in something already established. Unmotivated, unconfirmed facts don't lock in — that's the whole point.
 

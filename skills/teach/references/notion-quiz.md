@@ -42,17 +42,78 @@ Four things are load-bearing:
 - **"I don't know" is still an option**, exactly as in `quiz.md`. Notion has no 4-option cap, but that was never why the option exists — an unsure learner who guesses corrupts your map of their edge regardless of surface.
 - **The last line is the grading sentinel.** It must contain the question number so it's unique on the page. You will replace this exact string when you grade.
 
-Then say one line in the terminal and **end your turn**:
+Then say one line in the terminal, **arm the watch** (below), and end your turn:
 
-> Q3 is up — tick one in Notion, then say `go`.
+> Q3 is up in Notion — tick a box or type your answer; I'm watching.
 
 Do not paste the question into the terminal as well. It will render badly, which is the entire problem you are solving, and a learner reading the terminal copy will answer from the degraded version.
 
 **One live question at a time.** Batching costs adaptivity (`quiz.md`), and it also makes a fetch ambiguous about which question a tick belongs to. The exception is the same one as always: genuinely independent strands probed together — number them and post them in one append.
 
+## The watch — never make them nudge you
+
+The learner should not have to tell you they've answered. Tick a box, type a sentence — you notice, within about five seconds.
+
+**Arm the watch, then end your turn:**
+
+```
+Bash(command="~/.claude/skills/teach/scripts/watch-page.sh <page-id> 5",
+     run_in_background=true, description="waiting on Q3")
+```
+
+A backgrounded command re-invokes you when it exits, and `watch-page.sh` exits **only when the page actually changes**. So you are woken exactly once — when there is something to read. While the learner is still thinking, the script is silent and you are not running at all: no turns, no tokens, no context.
+
+That last part is the whole design. The naive version — wake on a timer, `notion-fetch`, look — pulls the entire lesson page into context on every poll just to discover that nothing happened. On a long page that is thousands of tokens per check, and it makes a 5-second cadence impossible. The script hashes the page **outside** your context and only wakes you on a real change, so polling is free and can be fast.
+
+**Read the exit code before anything else:**
+
+| Exit | Meaning | Do |
+|---|---|---|
+| 0 `changed` | They touched the page | `notion-fetch` and grade — this is the only branch that costs context |
+| 4 `timeout` | 30 min, no change | Say once: *"Still on Q3 whenever you're ready."* Stop watching. |
+| 3 `no-token` | Not configured | Fall back to the timer mode below. Mention it once, never again. |
+| 1 | API unreachable | Fall back to timer mode; say so once. |
+
+On exit 0, `notion-fetch` the page and branch:
+
+| State of `### Q3` | Do this |
+|---|---|
+| Sentinel already replaced | Stale wake — you already graded it. Emit nothing, re-arm nothing. |
+| A box ticked, or text written | Grade it in place. One-line verdict in chat. Move on. |
+| Still untouched | Re-arm another `sleep 20`. **Output no text at all.** |
+
+**Silence on an idle wake is not optional.** A "still waiting…" line every twenty seconds is more annoying than the nudge this replaces. The learner should see nothing between posting the question and the verdict.
+
+**Cap the wait at ~15 idle cycles (≈5 minutes).** Then stop re-arming and say once: *"Still on Q3 whenever you're ready — say `go` if I miss it."* A watch that re-arms forever burns turns while they're at lunch.
+
+**One watch at a time, ever.** Two live watches double the wake rate and race each other to grade the same question. Before arming, be sure the previous one is resolved or stale.
+
+**They may answer in the terminal instead** — a typed message reaches you immediately and interrupts the wait. Handle it normally; when the orphaned watch later fires, the sentinel is gone, so it reads as a stale wake and dies quietly. That's why the stale-wake branch exists.
+
+### Fallback: timer mode, when there's no token
+
+`watch-page.sh` needs a Notion internal-integration token (`~/.config/claude-teach/notion-token`). Without one it exits 3, and you degrade to a timer:
+
+```
+Bash(command="sleep 20", run_in_background=true, description="waiting on Q3")
+```
+
+Same loop, but each wake costs a full `notion-fetch` whether or not anything changed, so the interval has to stay around 20 seconds and the wait is not free. Tell the learner once that answers will be picked up a bit slowly and that the token removes it; then drop the subject. Never let setup nagging interrupt a lesson.
+
+### What the hash covers
+
+The fingerprint is sha256 over `(block id, type, checked, text)` for every block, following pagination so blocks appended at the end are included — which is exactly where questions live.
+
+It deliberately **excludes** `last_edited_time` and file URLs, because Notion's signed URLs rotate on their own and would otherwise fire a "changed" event every few minutes with nobody having touched anything.
+
+Two consequences worth knowing:
+
+- **Text inside a collapsed toggle is not watched.** Child blocks aren't fetched. In practice answers go at the top level, so this doesn't bite — but if a learner starts writing inside a toggle, you won't be woken.
+- **Any edit anywhere on the page wakes you**, not just the answer. Fixing a typo three sections up counts. That's fine and even useful — but it means exit 0 is *"something changed"*, never *"they answered"*. Always re-read the question's state before grading; never assume the wake was the answer.
+
 ## Reading the answer
 
-On their nudge, `notion-fetch` the lesson page and look at the to-dos under the `### Q3` heading:
+On each wake, `notion-fetch` the lesson page and look at the to-dos under the `### Q3` heading:
 
 | What you see | What it means |
 |---|---|
@@ -60,7 +121,9 @@ On their nudge, `notion-fetch` the lesson page and look at the to-dos under the 
 | No `- [x]` | Not answered yet. Say so plainly and wait — do not guess, and do not treat it as "I don't know". |
 | More than one `- [x]` | Ask them to leave one ticked, unless you posted it as multi-select. |
 
-If they typed something instead of ticking — a paragraph under the question, or a comment — read it and grade that. Free text is more diagnostic than a tick (`quiz.md` on the "Other" slot), so treat it as a gift rather than a protocol violation.
+**Anything they write counts as an answer, not just a tick.** A paragraph under the question, a word scrawled next to an option, a half-formed thought — all of it comes back in the fetch, and all of it is fair to grade. Free text is *more* diagnostic than a tick (`quiz.md` on the "Other" slot): it shows you the reasoning, not just where it landed. Treat it as a gift, never as a protocol violation, and never re-ask for a tick when they've already told you what they think.
+
+Comments are the one input the plain fetch misses — pass `include_discussions: true` to see them, and check there if the page body looks untouched but they clearly responded.
 
 ## Grading in place
 

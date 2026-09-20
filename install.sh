@@ -22,7 +22,8 @@ printf 'Installing into %s\n\n' "${DEST/#$HOME/\~}"
 
 while IFS= read -r f; do
   install_file "$SRC/$f" "$DEST/$f"
-done < <(cd "$SRC" && find skills agents -type f -name '*.md' | sort)
+  if [[ "$f" == *.sh && -e "$DEST/$f" ]]; then chmod +x "$DEST/$f"; fi
+done < <(cd "$SRC" && find skills agents -type f \( -name '*.md' -o -name '*.sh' \) | sort)
 
 cat <<'EOF'
 
@@ -32,6 +33,16 @@ Done. Next, for the Notion lesson log:
 
 then run /mcp inside Claude Code and authorize. The first /teach will set up the
 log destination and remember it.
+
+Optional — answer questions in Notion without touching the terminal. Create an
+internal integration at https://www.notion.so/my-integrations, connect it to
+your lessons parent page (⋯ → Connections), then:
+
+  mkdir -p ~/.config/claude-teach
+  printf '%s' 'ntn_YOUR_TOKEN' > ~/.config/claude-teach/notion-token
+  chmod 600 ~/.config/claude-teach/notion-token
+
+Without it, /teach still works — it just polls less often and more expensively.
 
 Start a lesson with:  /teach <topic>
 EOF

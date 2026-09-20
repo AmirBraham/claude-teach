@@ -50,6 +50,8 @@ skills/teach/references/notion-quiz.md     asking + grading math questions in No
 skills/teach/references/dependency-map.md  how to draw a Phase 2 map that's actually readable
 skills/teach/references/notion.md          the lesson-log contract (5 checkpoints)
 skills/teach/references/notion-config.md   where lessons get logged (set up on first run)
+skills/teach/references/notion-token.md    one-time token setup for the answer watcher
+skills/teach/scripts/watch-page.sh         hashes a Notion page in bash; exits when it changes
 skills/visualize/SKILL.md                  one minimal mermaid diagram, when a picture earns its place
 agents/researcher.md                       fact-verification subagent
 ```
