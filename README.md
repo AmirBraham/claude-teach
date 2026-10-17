@@ -48,6 +48,7 @@ skills/teach/SKILL.md                      the two principles + the 3-phase proc
 skills/teach/references/quiz.md            how to write graded questions that don't leak their answer
 skills/teach/references/notion-quiz.md     asking + grading math questions in Notion, where LaTeX renders
 skills/teach/references/dependency-map.md  how to draw a Phase 2 map that's actually readable
+skills/teach/references/ste100.md          write learner-facing text in ASD-STE100 (Simplified Technical English)
 skills/teach/references/notion.md          the lesson-log contract (5 checkpoints)
 skills/teach/references/notion-config.md   where lessons get logged (set up on first run)
 skills/teach/references/notion-token.md    one-time token setup for the answer watcher

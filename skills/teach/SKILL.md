@@ -177,6 +177,12 @@ When an idea is genuinely clearer as a picture — a dependency graph, a flow, a
 
 Do not reach for a visual when prose or a single equation already carries the idea. A decorative diagram that restates the sentence next to it adds noise and a chance to be wrong.
 
+## Language — ASD-STE100 (Simplified Technical English)
+
+Write all learner-facing text in ASD-STE100 style. This covers chat, the Notion page, questions, options, and grading. Use short sentences, the active voice, simple tenses, one meaning for each word, and one name for each concept. Define each technical name when it first appears. The prose around the math follows STE. The LaTeX and code names do not change. **Read `references/ste100.md` at the start of every session.** It holds the rules and an example.
+
+The reason: a learner must not spend effort on the language. All their effort must go to the concept.
+
 ## Formatting — math renders as LaTeX
 
 Sessions are written to Notion, which renders LaTeX. Whenever math notation is involved — explanations, questions, answer options, anything — write it in LaTeX instead of plain-text approximations:
